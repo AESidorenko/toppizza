@@ -57,7 +57,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=32)
      */
-    private $name;
+    private $name = "";
 
     /**
      * @ORM\OneToOne(targetEntity=Cart::class, mappedBy="customer", cascade={"persist", "remove"})
