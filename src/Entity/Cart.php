@@ -26,11 +26,6 @@ class Cart
     private $customer;
 
     /**
-     * @ORM\ManyToMany(targetEntity=MenuItem::class)
-     */
-    private $items;
-
-    /**
      * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="cart", orphanRemoval=true)
      */
     private $cartItems;
@@ -54,32 +49,6 @@ class Cart
     public function setCustomer(User $customer): self
     {
         $this->customer = $customer;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|MenuItem[]
-     */
-    public function getItems(): Collection
-    {
-        return $this->items;
-    }
-
-    public function addItem(MenuItem $item): self
-    {
-        if (!$this->items->contains($item)) {
-            $this->items[] = $item;
-        }
-
-        return $this;
-    }
-
-    public function removeItem(MenuItem $item): self
-    {
-        if ($this->items->contains($item)) {
-            $this->items->removeElement($item);
-        }
 
         return $this;
     }
