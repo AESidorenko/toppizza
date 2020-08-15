@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,6 +59,21 @@ class Order
      * @ORM\Column(type="decimal", precision=5, scale=2)
      */
     private $deliveryPrice;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrderItems::class, mappedBy="orderData", orphanRemoval=true)
+     */
+    private $items;
+
+    /**
+     * @ORM\Column(type="decimal", precision=5, scale=2)
+     */
+    private $usdRate;
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +172,49 @@ class Order
     public function setDeliveryPrice(string $deliveryPrice): self
     {
         $this->deliveryPrice = $deliveryPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrderItems[]
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(OrderItems $item): self
+    {
+        if (!$this->items->contains($item)) {
+            $this->items[] = $item;
+            $item->setOrderData($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(OrderItems $item): self
+    {
+        if ($this->items->contains($item)) {
+            $this->items->removeElement($item);
+            // set the owning side to null (unless already changed)
+            if ($item->getOrderData() === $this) {
+                $item->setOrderData(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUsdRate(): ?string
+    {
+        return $this->usdRate;
+    }
+
+    public function setUsdRate(string $usdRate): self
+    {
+        $this->usdRate = $usdRate;
 
         return $this;
     }
