@@ -33,6 +33,11 @@ class OrderItems
      */
     private $priceEuro;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $count;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class OrderItems
     public function setPriceEuro(string $priceEuro): self
     {
         $this->priceEuro = $priceEuro;
+
+        return $this;
+    }
+
+    public function getCount(): ?int
+    {
+        return $this->count;
+    }
+
+    public function setCount(int $count): self
+    {
+        $this->count = $count;
 
         return $this;
     }
