@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    const ROLE_REGISTERED_CUSTOMER = 'ROLE_REGISTERED_CUSTOMER';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
