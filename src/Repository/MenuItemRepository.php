@@ -47,4 +47,12 @@ class MenuItemRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getOrderedActualMenu(): array
+    {
+        return $this->createQueryBuilder('m')
+                    ->Where('m.isActive = TRUE')
+                    ->orderBy('m.priceEuro', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+    }
 }

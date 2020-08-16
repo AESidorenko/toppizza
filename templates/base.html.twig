@@ -3,10 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
-{% block javascripts %}{% endblock %}
+{#    <div id="js-user-data" data-profile="{{ app.user ? app.user|json_encode|e('html_attr') }}">#}
+{#    <div id="js-user-data" data-profile="{{ test|json_encode|e('html_attr') }}">#}
+{#        <!-- ... -->#}
+{#    </div>#}
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link active" href="#">Active</a>
+    </li>
+</ul>
+
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </body>
 </html>
