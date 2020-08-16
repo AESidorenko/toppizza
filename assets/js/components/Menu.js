@@ -22,6 +22,11 @@ class Menu extends Component
         });
     }
 
+    getCountFromCart()
+    {
+        return parseInt(Math.random() * 5);
+    }
+
     render()
     {
         return (
@@ -34,7 +39,7 @@ class Menu extends Component
                     <div className={'row'}>
                         {this.state.items.map(item =>
                             <div className="col-12 col-xs-6 col-sm-4" key={item.id}>
-                                <MenuItem item={item}></MenuItem>
+                                <MenuItem item={item} count={this.getCountFromCart(item.id)}></MenuItem>
                             </div>,
                         )}
                     </div>
