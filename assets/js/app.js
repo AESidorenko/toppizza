@@ -17,7 +17,48 @@ import ReactDOM from 'react-dom';
 import Menu from './components/Menu';
 
 document.addEventListener('DOMContentLoaded', function() {
-    // var userData = $('#js-user-data').data('profile');
-
     ReactDOM.render(<Menu></Menu>, document.getElementById('menu'));
 });
+
+let App = new class Application
+{
+    constructor()
+    {
+        this.cart = new Map();
+    }
+
+    addToCart(itemId)
+    {
+        this.cart.set(itemId, this.cart.has(itemId) ? (this.cart.get(itemId) + 1) : 1);
+        this.saveCartToLocalStorage();
+    }
+
+    isUserLoggedIn()
+    {
+        // var userData = $('#js-user-data').data('profile');
+        return false;
+    }
+
+    resetCart()
+    {
+        this.cart.clear();
+        this.saveCartToLocalStorage();
+    }
+
+    loadCartFromLocalStrorage()
+    {
+        this.cart = new Map(JSON.parse(localStorage.getItem('cart')));
+    }
+
+    saveCartToLocalStorage()
+    {
+        localStorage.setItem('cart', JSON.stringify(Array.from(this.cart.entries())));
+    }
+
+    getCart()
+    {
+        return this.cart;
+    }
+};
+
+export default App;

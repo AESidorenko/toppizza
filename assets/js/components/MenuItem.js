@@ -7,14 +7,15 @@ class MenuItem extends Component
         super(props);
 
         this.state = {
-            count: props.count,
-        };
+            count: props.item.count,
+        }
 
-        this.addToCart = this.addToCart.bind(this);
+        this.handleClickAddToCart = this.handleClickAddToCart.bind(this);
     }
 
-    addToCart(e)
+    handleClickAddToCart(e)
     {
+        this.props.onAddCart(this.props.item.id);
     }
 
     render()
@@ -28,11 +29,11 @@ class MenuItem extends Component
                 </div>
                 <div className="card-footer">
                     {
-                        this.props.count === 0 ? (
+                        this.state.count === 0 ? (
                             <button
                                 className="btn btn-success btn-add-to-cart"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
-                                onClick={this.addToCart}
+                                onClick={this.handleClickAddToCart}
                             >Add to cart</button>
                         ) : (
                             <p>In the cart</p>

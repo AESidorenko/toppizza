@@ -1,13 +1,21 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import MenuItem from './MenuItem';
+import App from '../app';
 
 class Menu extends Component
 {
     constructor()
     {
         super();
-        this.state = {items: [], loading: true};
+        this.state = {
+            items:   [],
+            loading: true,
+        };
+
+        this.itemRefs = [];
+
+        this.addToCart = this.addToCart.bind(this);
     }
 
     componentDidMount()
@@ -17,14 +25,35 @@ class Menu extends Component
 
     loadItems()
     {
+        if (App.isUserLoggedIn()) {
+            // todo: use loaded cart
+        } else {
+            // todo: (re)create cart from local storage
+            App.resetCart();
+            // App.loadCartFromLocalStrorage();
+        }
+
         axios.get(`/api/menu`).then(items => {
+            items.data.forEach((item) => item.count = 0);
             this.setState({items: items.data, loading: false});
+            this.itemRefs = Array(items.data.length).fill(null).map(() => React.createRef());
         });
     }
 
-    getCountFromCart()
+    addToCart(itemId)
     {
-        return parseInt(Math.random() * 5);
+        App.addToCart(itemId);
+        console.log(itemId, App.getCart());
+        // this.updateFromCart();
+    }
+
+    updateFromCart()
+    {
+        const cart = App.getCart();
+
+        this.state.items.map((item, index) => this.state.items[index].count = cart[index]);
+
+        console.log(this.state.items);
     }
 
     render()
@@ -37,9 +66,12 @@ class Menu extends Component
                     </div>
                 ) : (
                     <div className={'row'}>
-                        {this.state.items.map(item =>
+                        {this.state.items.map((item, index) =>
                             <div className="col-12 col-xs-6 col-sm-4" key={item.id}>
-                                <MenuItem item={item} count={this.getCountFromCart(item.id)}></MenuItem>
+                                <MenuItem item={item}
+                                          onAddCart={this.addToCart}
+                                          ref={this.itemRefs[index]}
+                                ></MenuItem>
                             </div>,
                         )}
                     </div>
@@ -47,6 +79,7 @@ class Menu extends Component
             </div>
         );
     }
+
 }
 
 export default Menu;
