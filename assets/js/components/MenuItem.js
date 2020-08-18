@@ -7,10 +7,16 @@ class MenuItem extends Component
         super(props);
 
         this.state = {
-            count: props.item.count,
-        }
+            count: props.item.countInCart,
+        };
 
         this.handleClickAddToCart = this.handleClickAddToCart.bind(this);
+    }
+
+    componentWillReceiveProps(props)
+    {
+        // this.setState({ open: props.drawerOpen })
+        console.log('componentWillReceiveProps');
     }
 
     handleClickAddToCart(e)

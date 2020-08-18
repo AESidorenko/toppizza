@@ -34,26 +34,36 @@ class Menu extends Component
         }
 
         axios.get(`/api/menu`).then(items => {
-            items.data.forEach((item) => item.count = 0);
+            items.data.forEach((item) => item.countInCart = 0);
             this.setState({items: items.data, loading: false});
             this.itemRefs = Array(items.data.length).fill(null).map(() => React.createRef());
+            console.log('Set after loading: ', this.state);
         });
     }
 
     addToCart(itemId)
     {
         App.addToCart(itemId);
-        console.log(itemId, App.getCart());
-        // this.updateFromCart();
+        this.updateFromCart();
     }
 
     updateFromCart()
     {
-        const cart = App.getCart();
+        const cart  = App.getCart(),
+              items = JSON.parse(JSON.stringify(this.state.items));
 
-        this.state.items.map((item, index) => this.state.items[index].count = cart[index]);
+        console.log('Cart: ', cart);
+        console.log('this.state.items: ', this.state.items);
+        console.log('items: ', items);
 
-        console.log(this.state.items);
+        items.map((item, index) => items[index].countInCart = cart.get(item.id) ?? 0);
+        items.map((item, index) => console.log(items[index], cart.get(item.id) ?? 0));
+
+        this.setState({items: items}, function() {
+            console.log('items after: ', items);
+            console.log('this.state.items after: ', this.state);
+        });
+
     }
 
     render()
