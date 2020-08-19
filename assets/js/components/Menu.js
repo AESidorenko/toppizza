@@ -15,7 +15,8 @@ class Menu extends Component
 
         this.itemRefs = [];
 
-        this.addToCart = this.addToCart.bind(this);
+        this.addToCart      = this.addToCart.bind(this);
+        this.removeFromCart = this.removeFromCart.bind(this);
     }
 
     componentDidMount()
@@ -47,23 +48,20 @@ class Menu extends Component
         this.updateFromCart();
     }
 
+    removeFromCart(itemId)
+    {
+        App.removeFromCart(itemId);
+        this.updateFromCart();
+    }
+
     updateFromCart()
     {
         const cart  = App.getCart(),
-              items = JSON.parse(JSON.stringify(this.state.items));
+              items = [...this.state.items];
 
-        console.log('Cart: ', cart);
-        console.log('this.state.items: ', this.state.items);
-        console.log('items: ', items);
+        items.forEach(item => item.countInCart = cart.get(item.id) ?? 0);
 
-        items.map((item, index) => items[index].countInCart = cart.get(item.id) ?? 0);
-        items.map((item, index) => console.log(items[index], cart.get(item.id) ?? 0));
-
-        this.setState({items: items}, function() {
-            console.log('items after: ', items);
-            console.log('this.state.items after: ', this.state);
-        });
-
+        this.setState({items});
     }
 
     render()
@@ -79,7 +77,8 @@ class Menu extends Component
                         {this.state.items.map((item, index) =>
                             <div className="col-12 col-xs-6 col-sm-4" key={item.id}>
                                 <MenuItem item={item}
-                                          onAddCart={this.addToCart}
+                                          onAddToCart={this.addToCart}
+                                          onRemoveFromCart={this.removeFromCart}
                                           ref={this.itemRefs[index]}
                                 ></MenuItem>
                             </div>,

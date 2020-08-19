@@ -33,6 +33,13 @@ let App = new class Application
         this.saveCartToLocalStorage();
     }
 
+    removeFromCart(itemId)
+    {
+        let count = (this.cart.get(itemId) ?? 1) - 1;
+        this.cart.set(itemId, count > 0 ? count : 0);
+        this.saveCartToLocalStorage();
+    }
+
     isUserLoggedIn()
     {
         // var userData = $('#js-user-data').data('profile');
