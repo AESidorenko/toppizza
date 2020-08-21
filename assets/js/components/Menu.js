@@ -5,10 +5,12 @@ import App from '../app';
 
 class Menu extends Component
 {
-    constructor()
+    constructor(props)
     {
-        super();
+        super(props);
+
         this.state = {
+            cart:    props.cart,
             items:   [],
             loading: true,
         };
@@ -38,7 +40,6 @@ class Menu extends Component
             items.data.forEach((item) => item.countInCart = 0);
             this.setState({items: items.data, loading: false});
             this.itemRefs = Array(items.data.length).fill(null).map(() => React.createRef());
-            console.log('Set after loading: ', this.state);
         });
     }
 
@@ -54,18 +55,24 @@ class Menu extends Component
         this.updateFromCart();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot)
+    {
+        console.log('Menu did update');
+    }
+
     updateFromCart()
     {
-        const cart  = App.getCart(),
-              items = [...this.state.items];
+        const items = [...this.state.items];
 
-        items.forEach(item => item.countInCart = cart.get(item.id) ?? 0);
+        items.forEach(item => item.countInCart = this.props.cart.get(item.id) ?? 0);
 
         this.setState({items});
     }
 
     render()
     {
+        console.log('Menu re-render');
+
         return (
             <div>
                 {this.state.loading ? (

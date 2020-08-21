@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends AbstractController
 {
+    const ONE_HOUR = 60 * 60;
+
     /**
      * @Route("/", name="application")
      * @param Request            $request
@@ -21,15 +23,17 @@ class ApplicationController extends AbstractController
      */
     public function index(Request $request, SessionInterface $session, MenuItemRepository $menuItemRepository, CartRepository $cartRepository)
     {
-        $cookies = $request->cookies;
+        $user = $this->getUser();
+
+        // if cart from session exists:
+        //      - get cart from session
+        // else:
+        //      - generate new cart-hash
+        //      - clear cart
 
         $cartHash = $session->get('cart-hash', null);
-
         if (is_null($cartHash)) {
-//            $cookie = new Cookie('cart-hash', uniqid('cart-', true), time() + 60 * 60);
             $session->set('cart-hash', uniqid('cart-', true));
-        } else {
-            $cartRecord = $cartRepository->findOneByUuid($session->get('cart-hash'));
         }
 
         $response = $this->render('application/index.html.twig', [
@@ -45,5 +49,15 @@ class ApplicationController extends AbstractController
         }
 
         return $response;
+    }
+
+    /**
+     * @Route("/cart", name="cart")
+     * @return Response
+     */
+    public function cart()
+    {
+        return $this->render('application/cart.html.twig', [
+        ]);
     }
 }

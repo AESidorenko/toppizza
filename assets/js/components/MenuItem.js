@@ -10,12 +10,6 @@ class MenuItem extends Component
         this.handleClickRemoveFromCart = this.handleClickRemoveFromCart.bind(this);
     }
 
-    UNSAFE_componentWillReceiveProps(props)
-    {
-        // this.setState({ open: props.drawerOpen })
-        // console.log('componentWillReceiveProps');
-    }
-
     handleClickAddToCart(e)
     {
         this.props.onAddToCart(this.props.item.id);
@@ -28,8 +22,6 @@ class MenuItem extends Component
 
     render()
     {
-        console.log('render menu item', this.props.item);
-
         return (
             <div className="card mb-4">
                 {/* todo: make real images URL */}

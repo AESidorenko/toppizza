@@ -15,16 +15,23 @@ import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Menu from './components/Menu';
-
-document.addEventListener('DOMContentLoaded', function() {
-    ReactDOM.render(<Menu></Menu>, document.getElementById('menu'));
-});
+import MiniCart from './components/MiniCart';
 
 let App = new class Application
 {
     constructor()
     {
-        this.cart = new Map();
+        this.cart        = new Map();
+        this.MenuElement = null;
+    }
+
+    init(menuSelector, miniCartSelector)
+    {
+        this.MenuElement     = React.createElement(Menu, {cart: this.cart});
+        this.MiniCartElement = React.createElement(MiniCart, {cart: this.cart});
+
+        ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
+        this.miniCart = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
     }
 
     addToCart(itemId)
@@ -60,6 +67,9 @@ let App = new class Application
     saveCartToLocalStorage()
     {
         localStorage.setItem('cart', JSON.stringify(Array.from(this.cart.entries())));
+        if (typeof (this.miniCart) !== 'undefined') {
+            this.miniCart.update(this.cart);
+        }
     }
 
     getCart()
@@ -67,5 +77,9 @@ let App = new class Application
         return this.cart;
     }
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    App.init('menu', 'mini-cart');
+});
 
 export default App;
