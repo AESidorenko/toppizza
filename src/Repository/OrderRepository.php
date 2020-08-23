@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,4 +48,14 @@ class OrderRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getMostRecentByIdempotencyKey(string $idempotencyKey): ?Order
+    {
+        return $this->createQueryBuilder('o')
+                    ->andWhere('o.idempotencyKey = :idKey')
+                    ->setParameter('idKey', $idempotencyKey)
+                    ->orderBy('o.updatedAt', 'ASC')
+                    ->setMaxResults(1)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
 }

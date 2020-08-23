@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import CartItem from './CartItem';
 import OrderForm from './OrderForm';
+import Modal from './Modal';
 
 class Cart extends Component
 {
@@ -10,17 +11,27 @@ class Cart extends Component
         super(props);
 
         this.state = {
-            items:         [],
-            loading:       true,
-            cartEmpty:     false,
-            deliveryPrice: 0,
+            items:          [],
+            loading:        true,
+            cartEmpty:      false,
+            orderSubmitted: false,
+            deliveryPrice:  0,
+            modal:          {
+                title: '',
+                text:  '',
+            },
+            showModal:      false,
+            modalCallback:  this.hideModal,
         };
 
         this.itemRefs = [];
 
-        this.loadItems          = this.loadItems.bind(this);
-        this.handleCountChanged = this.handleCountChanged.bind(this);
-        this.getTotalPrice      = this.getTotalPrice.bind(this);
+        this.loadItems            = this.loadItems.bind(this);
+        this.handleCountChanged   = this.handleCountChanged.bind(this);
+        this.getTotalPrice        = this.getTotalPrice.bind(this);
+        this.hideModal            = this.hideModal.bind(this);
+        this.handleOrderSubmitted = this.handleOrderSubmitted.bind(this);
+        this.handleOrderFailed    = this.handleOrderFailed.bind(this);
     }
 
     componentDidMount()
@@ -50,6 +61,44 @@ class Cart extends Component
             });
     }
 
+    handleOrderSubmitted()
+    {
+        this.setState({
+            orderSubmitted: true,
+            modal:          {
+                title: 'Error occurred',
+                text:  'Order submit failed, please try one more time',
+            },
+            showModal:      true,
+            modalCallback:  function() {
+                window.location = '/';
+            },
+        });
+    }
+
+    handleOrderFailed()
+    {
+        this.setState({
+            modal:         {
+                title: 'Error occurred',
+                text:  'Order submit failed, please try one more time',
+            },
+            showModal:     true,
+            modalCallback: this.hideModal,
+        });
+    }
+
+    hideModal()
+    {
+        this.setState({
+            modal:     {
+                title: '',
+                text:  '',
+            },
+            showModal: false,
+        });
+    }
+
     handleCountChanged(itemId, newValue)
     {
         this.props.onItemCountChanged(itemId, newValue);
@@ -77,6 +126,19 @@ class Cart extends Component
 
     render()
     {
+        if (this.state.orderSubmitted) {
+            return (
+                <div>
+                    <div className="card">
+                        <div className="card-body">
+                            Thank you for your order! We will deliver it within an hour.
+                        </div>
+                    </div>
+                    <a href="/">Back to menu...</a>
+                </div>
+            );
+        }
+
         if (this.state.cartEmpty) {
             return (
                 <div>
@@ -92,6 +154,8 @@ class Cart extends Component
 
         return (
             <div>
+                <Modal show={this.state.showModal} handleClose={this.state.modalCallback} config={this.state.modal}></Modal>
+
                 {this.state.loading ? (
                     <div className="spinner-border" role="status">
                         <span className="sr-only">Loading...</span>
@@ -112,7 +176,12 @@ class Cart extends Component
                 <div className="mt-3">Total price: {this.getTotalPrice()}</div>
 
                 {this.state.cartEmpty ? '' : (
-                    <OrderForm></OrderForm>
+                    <OrderForm
+                        onDone={this.handleOrderSubmitted}
+                        onError={this.handleOrderFailed}
+                        cart={this.props.cart}
+                        totalPrice={this.getTotalPrice()}
+                    ></OrderForm>
                 )}
             </div>
 

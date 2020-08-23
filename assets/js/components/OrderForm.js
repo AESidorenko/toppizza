@@ -26,17 +26,24 @@ class OrderForm extends Component
             method: 'post',
             url:    '/api/order',
             data:   {
-                'items':          [...this.props.cart].map((v) => v[0]),
+                'items':          [...this.props.cart.entries()],
                 'contacts':       {
                     'username': document.getElementById('username').value,
                     'address':  document.getElementById('userAddress').value,
                     'phone':    document.getElementById('contactPhone').value,
                 },
+                'usdRate':        1.15, //todo: make configurable
+                'totalPrice':     this.props.totalPrice,
                 'idempotencyKey': this.state.cartStorage.getIdempotencyKey(),
             },
         })
-            .then(({data}) => {
+            .then(() => {
+                this.state.cartStorage.reset();
                 this.state.cartStorage.updateIdempotencyKey();
+                this.props.onDone();
+            })
+            .catch(() => {
+                this.props.onError();
             });
     }
 

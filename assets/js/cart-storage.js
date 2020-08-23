@@ -67,7 +67,7 @@ class CartStorage
 
     getIdempotencyKey()
     {
-        return localStorage.setItem('idempotencyKey', key) ?? this.updateIdempotencyKey();
+        return localStorage.getItem('idempotencyKey') ?? this.updateIdempotencyKey();
     }
 }
 
