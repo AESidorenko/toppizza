@@ -57,7 +57,11 @@ class Cart extends Component
     {
         if (this.state.cartEmpty) {
             return (
-                <h1>Example heading <span className="badge badge-secondary">New</span></h1>
+                <div className="card">
+                    <div className="card-body">
+                        Your cart is empty.
+                    </div>
+                </div>
             );
         }
 
