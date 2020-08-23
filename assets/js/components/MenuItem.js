@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import App from '../app';
 
 class MenuItem extends Component
 {
@@ -8,6 +9,7 @@ class MenuItem extends Component
 
         this.handleClickAddToCart      = this.handleClickAddToCart.bind(this);
         this.handleClickRemoveFromCart = this.handleClickRemoveFromCart.bind(this);
+        this.getCountInCart            = this.getCountInCart.bind(this);
     }
 
     handleClickAddToCart(e)
@@ -18,6 +20,11 @@ class MenuItem extends Component
     handleClickRemoveFromCart(e)
     {
         this.props.onRemoveFromCart(this.props.item.id);
+    }
+
+    getCountInCart(id)
+    {
+        return App.getCountInCart(id) ?? 0;
     }
 
     render()
@@ -31,7 +38,7 @@ class MenuItem extends Component
                 </div>
                 <div className="card-footer">
                     {
-                        this.props.item.countInCart === 0 ? (
+                        this.getCountInCart(this.props.item.id) === 0 ? (
                             <button
                                 className="btn btn-success btn-add-to-cart"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
@@ -45,7 +52,7 @@ class MenuItem extends Component
                                     onClick={this.handleClickRemoveFromCart}
                                 >-
                                 </button>
-                                <span>x{this.props.item.countInCart}</span>
+                                <span>x{this.getCountInCart(this.props.item.id)}</span>
                                 <button
                                     className="btn btn-success btn-add-to-cart"
                                     id={'add-to-cart-' + this.props.item.id.toString()}

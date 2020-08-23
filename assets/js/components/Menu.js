@@ -19,6 +19,8 @@ class Menu extends Component
 
         this.addToCart      = this.addToCart.bind(this);
         this.removeFromCart = this.removeFromCart.bind(this);
+        this.updateFromCart = this.updateFromCart.bind(this);
+        this.loadItems      = this.loadItems.bind(this);
     }
 
     componentDidMount()
@@ -28,19 +30,11 @@ class Menu extends Component
 
     loadItems()
     {
-        if (App.isUserLoggedIn()) {
-            // todo: use loaded cart
-        } else {
-            // todo: (re)create cart from local storage
-            App.resetCart();
-            // App.loadCartFromLocalStrorage();
-        }
-
-        axios.get(`/api/menu`).then(items => {
-            items.data.forEach((item) => item.countInCart = 0);
-            this.setState({items: items.data, loading: false});
-            this.itemRefs = Array(items.data.length).fill(null).map(() => React.createRef());
-        });
+        axios.get(`/api/menu`)
+            .then(items => {
+                this.setState({items: items.data, loading: false});
+                this.itemRefs = Array(items.data.length).fill(null).map(() => React.createRef());
+            });
     }
 
     addToCart(itemId)
@@ -55,24 +49,18 @@ class Menu extends Component
         this.updateFromCart();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot)
-    {
-        console.log('Menu did update');
-    }
-
     updateFromCart()
     {
-        const items = [...this.state.items];
-
-        items.forEach(item => item.countInCart = this.props.cart.get(item.id) ?? 0);
-
-        this.setState({items});
+        // const cart = new Map();
+        //
+        // [...this.state.cart].forEach((i) => cart.set(i[0], i[1]));
+        //
+        // this.setState({cart: cart});
+        this.setState({cart: new Map([...App.getCart()])});
     }
 
     render()
     {
-        console.log('Menu re-render');
-
         return (
             <div>
                 {this.state.loading ? (
@@ -95,7 +83,6 @@ class Menu extends Component
             </div>
         );
     }
-
 }
 
 export default Menu;

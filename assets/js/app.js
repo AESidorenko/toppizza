@@ -8,9 +8,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.scss';
 import 'bootstrap';
-
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-import $ from 'jquery';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -27,49 +25,73 @@ let App = new class Application
 
     init(menuSelector, miniCartSelector)
     {
-        this.MenuElement     = React.createElement(Menu, {cart: this.cart});
-        this.MiniCartElement = React.createElement(MiniCart, {cart: this.cart});
+        App.touchCart();
 
-        ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
-        this.miniCart = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
+        this.MiniCartElement = React.createElement(MiniCart, {cart: this.cart});
+        this.MenuElement     = React.createElement(Menu, {cart: this.cart});
+
+        this.menuObject     = ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
+        this.miniCartObject = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
     }
 
     addToCart(itemId)
     {
-        this.cart.set(itemId, this.cart.has(itemId) ? (this.cart.get(itemId) + 1) : 1);
-        this.saveCartToLocalStorage();
+        App.touchCart();
+
+        if (this.cart.has(itemId)) {
+            this.cart.set(itemId, this.cart.get(itemId) + 1);
+        } else {
+            this.cart.set(itemId, 1);
+        }
+
+        this.saveCart();
+    }
+
+    saveCart()
+    {
+        localStorage.setItem('cartItems', JSON.stringify([...this.cart]));
+        localStorage.setItem('cartUpdated', Date.now().toString());
+
+        this.miniCartObject.updateFromCart();
     }
 
     removeFromCart(itemId)
     {
-        let count = (this.cart.get(itemId) ?? 1) - 1;
-        this.cart.set(itemId, count > 0 ? count : 0);
-        this.saveCartToLocalStorage();
-    }
+        App.touchCart();
 
-    isUserLoggedIn()
-    {
-        // var userData = $('#js-user-data').data('profile');
-        return false;
+        if (this.cart.has(itemId)) {
+            let count = this.cart.get(itemId) - 1;
+            this.cart.set(itemId, count > 0 ? count : 0);
+        } else {
+            this.cart.set(itemId, 0);
+        }
+
+        this.saveCart();
     }
 
     resetCart()
     {
         this.cart.clear();
-        this.saveCartToLocalStorage();
+        this.saveCart();
     }
 
-    loadCartFromLocalStrorage()
+    cartExists()
     {
-        this.cart = new Map(JSON.parse(localStorage.getItem('cart')));
+        return localStorage.getItem('cartItems') !== null;
     }
 
-    saveCartToLocalStorage()
+    touchCart()
     {
-        localStorage.setItem('cart', JSON.stringify(Array.from(this.cart.entries())));
-        if (typeof (this.miniCart) !== 'undefined') {
-            this.miniCart.update(this.cart);
+        if (!this.cartExists()) {
+            this.resetCart();
+        } else {
+            localStorage.setItem('cartUpdated', Date.now().toString());
         }
+    }
+
+    getCountInCart(id)
+    {
+        return this.cart.get(id);
     }
 
     getCart()

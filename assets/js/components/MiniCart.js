@@ -10,49 +10,41 @@ class MiniCart extends Component
         this.state = {
             cart: props.cart, // todo: check - needed?
         };
+
+        this.handleToCart   = this.handleToCart.bind(this);
+        this.getItemsCount  = this.getItemsCount.bind(this);
+        this.updateFromCart = this.updateFromCart.bind(this);
     }
 
-    update(cart)
+    handleToCart()
     {
-        this.setState(prevState => {
-            const newCart = new Map(cart);
-            return Object.assign({}, prevState, {cart: newCart});
-        });
-    }
-
-    componentDidMount()
-    {
-    }
-
-    getItemsCount()
-    {
-        let sum = 0;
-        this.state.cart.forEach(function(v) {
-            sum += v;
-        });
-        return sum;
+        App.touchCart();
+        window.location = '/cart';
     }
 
     updateFromCart()
     {
-        const items = [...this.state.items];
+        // const cart = new Map();
+        //
+        // [...this.state.cart].forEach((i) => cart.set(i[0], i[1]));
 
-        items.forEach(item => item.countInCart = this.props.cart.get(item.id) ?? 0);
+        this.setState({cart: new Map([...App.getCart()])});
+    }
 
-        this.setState({items});
+    getItemsCount()
+    {
+        return [...this.state.cart].reduce((s, i) => s += i[1], 0);
     }
 
     render()
     {
-        console.log('mini cart render', this.state.cart);
-
         return (
             <div>
                 {
                     this.getItemsCount() > 0 ?
-                        <a type="button" className="btn btn-success" href="/cart">Items in cart: <span
-                            className="badge badge-warning">{this.getItemsCount()}</span></a> :
-                        <button className="btn btn-outline-danger disabled">Cart empty</button>
+                        <button type="button" className="btn btn-success" onClick={this.handleToCart}>Items in cart: <span
+                            className="badge badge-warning">{this.getItemsCount()}</span></button> :
+                        <button type="button" className="btn btn-outline-danger disabled">Cart empty</button>
                 }
             </div>
         );
