@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
+    const DELIVERY_PRICE = 2;
+
     /**
      * @Route("/api/menu", name="getMenuItems")
      * @param MenuItemRepository $menuItemRepository
@@ -63,7 +65,8 @@ class ApiController extends AbstractController
         }
 
         return new JsonResponse([
-            'items' => $items,
+            'items'         => $items,
+            'deliveryPrice' => self::DELIVERY_PRICE //todo: make it configurable
         ]);
     }
 }

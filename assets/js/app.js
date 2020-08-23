@@ -30,6 +30,7 @@ let App = new class Application
     init(menuSelector, miniCartSelector)
     {
         this.cartStorage.touch();
+        this.cartStorage.getIdempotencyKey();
 
         this.MiniCartElement = React.createElement(MiniCart, {cart: this.cartStorage.cart});
         this.MenuElement     = React.createElement(Menu, {

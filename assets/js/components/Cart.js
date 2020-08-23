@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import CartItem from './CartItem';
+import OrderForm from './OrderForm';
 
 class Cart extends Component
 {
@@ -9,15 +10,17 @@ class Cart extends Component
         super(props);
 
         this.state = {
-            items:     [],
-            loading:   true,
-            cartEmpty: false,
+            items:         [],
+            loading:       true,
+            cartEmpty:     false,
+            deliveryPrice: 0,
         };
 
         this.itemRefs = [];
 
         this.loadItems          = this.loadItems.bind(this);
         this.handleCountChanged = this.handleCountChanged.bind(this);
+        this.getTotalPrice      = this.getTotalPrice.bind(this);
     }
 
     componentDidMount()
@@ -38,7 +41,12 @@ class Cart extends Component
                 console.log('Loaded', data);
                 this.itemRefs    = Array(data.items.length).fill(null).map(() => React.createRef());
                 const itemsTotal = [...this.props.cart].reduce((s, i) => s += i[1], 0);
-                this.setState({items: data.items, loading: false, cartEmpty: itemsTotal === 0});
+                this.setState({
+                    items:         data.items,
+                    loading:       false,
+                    cartEmpty:     itemsTotal === 0,
+                    deliveryPrice: data.deliveryPrice,
+                });
             });
     }
 
@@ -47,20 +55,37 @@ class Cart extends Component
         this.props.onItemCountChanged(itemId, newValue);
 
         const itemsTotal = [...this.props.cart].reduce((s, i) => s += i[1], 0);
+        this.setState({cartEmpty: itemsTotal === 0});
+    }
 
-        if (itemsTotal === 0) {
-            this.setState({cartEmpty: true});
-        }
+    getTotalPrice()
+    {
+        return [...this.props.cart].reduce((s, i) => s += this.getItemPrice(i[0]) * i[1], 0) + this.state.deliveryPrice;
+    }
+
+    getItemPrice(itemId)
+    {
+        let price = 0;
+        this.state.items.forEach((i) => {
+            if (i.id === itemId) {
+                price = i.price;
+            }
+        });
+
+        return price;
     }
 
     render()
     {
         if (this.state.cartEmpty) {
             return (
-                <div className="card">
-                    <div className="card-body">
-                        Your cart is empty.
+                <div>
+                    <div className="card">
+                        <div className="card-body">
+                            Your cart is empty.
+                        </div>
                     </div>
+                    <a href="/">Back to menu...</a>
                 </div>
             );
         }
@@ -81,7 +106,16 @@ class Cart extends Component
                         ></CartItem>, this)
                 )
                 }
+
+                <div className="mt-3">+{this.state.deliveryPrice} for delvery</div>
+
+                <div className="mt-3">Total price: {this.getTotalPrice()}</div>
+
+                {this.state.cartEmpty ? '' : (
+                    <OrderForm></OrderForm>
+                )}
             </div>
+
         );
     }
 }
