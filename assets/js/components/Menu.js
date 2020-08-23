@@ -9,13 +9,15 @@ class Menu extends Component
         super(props);
 
         this.state = {
-            items:   [],
-            loading: true,
+            items:        [],
+            loading:      true,
+            currencyCode: props.currencyCode,
         };
 
         this.itemRefs = [];
 
-        this.loadItems = this.loadItems.bind(this);
+        this.loadItems       = this.loadItems.bind(this);
+        this.setCurrencyCode = this.setCurrencyCode.bind(this);
     }
 
     componentDidMount()
@@ -32,8 +34,15 @@ class Menu extends Component
             });
     }
 
+    setCurrencyCode(currencyCode)
+    {
+        this.setState({currencyCode: currencyCode});
+    }
+
     render()
     {
+        console.log('Menu re-render');
+
         return (
             <div>
                 {this.state.loading ? (
@@ -47,6 +56,7 @@ class Menu extends Component
                                 <MenuItem item={item}
                                           itemCount={this.props.cart.get(item.id) ?? 0}
                                           onCountChanged={this.props.onItemCountChanged}
+                                          currencyCode={this.state.currencyCode}
                                           ref={this.itemRefs[index]}
                                 ></MenuItem>
                             </div>, this,

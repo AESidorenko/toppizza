@@ -32,6 +32,14 @@ class MenuItem extends Component
         });
     }
 
+    getPriceString(price)
+    {
+        const prefix = this.props.currencyCode === 'EUR' ? '\u20AC' : '$';
+        const rate   = this.props.currencyCode === 'EUR' ? 1 : 1.18; // todo: make it configurable
+
+        return prefix + (rate * parseFloat(price)).toFixed(2).toString();
+    }
+
     render()
     {
         return (
@@ -48,7 +56,7 @@ class MenuItem extends Component
                                 className="btn btn-success btn-add-to-cart"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
                                 onClick={this.handleClickAddToCart}
-                            >Add to cart</button>
+                            >Add to cart +{this.getPriceString(this.props.item.price)}</button>
                         ) : (
                             <div>
                                 <button
@@ -62,7 +70,7 @@ class MenuItem extends Component
                                     className="btn btn-success btn-add-to-cart"
                                     id={'add-to-cart-' + this.props.item.id.toString()}
                                     onClick={this.handleClickAddToCart}
-                                >+1
+                                >+{this.getPriceString(this.props.item.price)}
                                 </button>
                             </div>
                         )

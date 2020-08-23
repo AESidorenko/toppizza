@@ -7,7 +7,6 @@ use App\Entity\Order;
 use App\Entity\OrderItems;
 use App\Repository\MenuItemRepository;
 use App\Repository\OrderRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,8 +34,10 @@ class ApiController extends AbstractController
         /** @var MenuItem $record */
         foreach ($menuRecords as $record) {
             $menuItems[] = [
-                'id'    => $record->getId(),
-                'title' => $record->getTitle()
+                'id'          => $record->getId(),
+                'title'       => $record->getTitle(),
+                'price'       => $record->getPriceEuro(),
+                'description' => $record->getDescription()
             ];
         }
 

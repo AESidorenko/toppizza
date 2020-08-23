@@ -33,3 +33,24 @@
 .display-none {
   display: none;
 }
+
+.currency {
+  padding: 5px;
+  margin: 3px;
+  font-size: 10px;
+  float: left;
+  clear: left;
+  background: white;
+  color: blue;
+  cursor: pointer;
+}
+
+.currency-active {
+  background: blue;
+  color: white;
+}
+
+a.currency-active:hover {
+  text-decoration: none;
+  color: white;
+}

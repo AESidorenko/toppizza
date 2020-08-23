@@ -8,16 +8,19 @@
     {% endblock %}
 </head>
 <body>
-{# todo: remove the code #}
-{#    <div id="js-user-data" data-profile="{{ app.user ? app.user|json_encode|e('html_attr') }}">#}
-{#    <div id="js-user-data" data-profile="{{ test|json_encode|e('html_attr') }}">#}
-{#        <!-- ... -->#}
-{#    </div>#}
-<ul class="nav justify-content-end">
-    <li class="nav-item">
-        <a class="nav-link active" href="#">Active</a>
-    </li>
-</ul>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="row w-100">
+            <div class="col-8">
+                <p class="logo h3 text-primary">ToPPizza</p>
+            </div>
+            <div class="col-2" id="currency-container">
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+    </div>
+</nav>
 
 <div class="container">
     {% block body %}{% endblock %}

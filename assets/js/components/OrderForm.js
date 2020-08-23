@@ -37,7 +37,16 @@ class OrderForm extends Component
                 'idempotencyKey': this.state.cartStorage.getIdempotencyKey(),
             },
         })
-            .then(() => {
+            .then((response) => {
+                if (response.status == 412) {
+                    return;
+                }
+
+                if (response.status != 200) {
+                    this.props.onError();
+                    return;
+                }
+
                 this.state.cartStorage.reset();
                 this.state.cartStorage.updateIdempotencyKey();
                 this.props.onDone();

@@ -13,33 +13,47 @@ import ReactDOM from 'react-dom';
 import Menu from './components/Menu';
 import MiniCart from './components/MiniCart';
 import CartStorage from './cart-storage';
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
+import Currency from './components/Currency';
 
 let App = new class Application
 {
     constructor()
     {
-        this.MenuElement = null;
-        this.cartStorage = new CartStorage();
+        this.MenuElement  = null;
+        this.cartStorage  = new CartStorage();
+        this.currencyCode = 'EUR';
 
         this.cartStorage.load();
 
         this.handleItemCountChanged = this.handleItemCountChanged.bind(this);
+        this.handleCurrencyChange   = this.handleCurrencyChange.bind(this);
     }
 
-    init(menuSelector, miniCartSelector)
+    init(menuSelector, miniCartSelector, currencySelector)
     {
         this.cartStorage.touch();
         this.cartStorage.getIdempotencyKey();
 
         this.MiniCartElement = React.createElement(MiniCart, {cart: this.cartStorage.cart});
+        this.Currnecy        = React.createElement(Currency, {
+            value:    'EUR',
+            onChange: this.handleCurrencyChange,
+        });
         this.MenuElement     = React.createElement(Menu, {
             cart:               this.cartStorage.cart,
             onItemCountChanged: this.handleItemCountChanged,
+            currencyCode:       this.currencyCode,
         });
 
-        this.menuObject     = ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
+        ReactDOM.render(this.Currnecy, document.getElementById(currencySelector));
+        this.MenuObject     = ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
         this.miniCartObject = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
+    }
+
+    handleCurrencyChange(currencyCode)
+    {
+        this.currencyCode = currencyCode;
+        this.MenuObject.setCurrencyCode(currencyCode);
     }
 
     handleItemCountChanged(itemId, newValue)
@@ -56,7 +70,7 @@ let App = new class Application
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    App.init('menu', 'mini-cart');
+    App.init('menu', 'mini-cart', 'currency-container');
 });
 
 export default App;
