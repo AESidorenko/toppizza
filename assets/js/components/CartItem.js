@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import Config from '../config';
 
 class CartItem extends Component
 {
@@ -49,7 +50,7 @@ class CartItem extends Component
                     <p>{this.props.item.title}</p>
                 </div>
                 <div className="col-3">
-                    <p>{this.props.item.price}</p>
+                    <p>{Config.currencyStringRule(this.props.item.price * this.state.itemCount, this.props.currencyCode)}</p>
                 </div>
                 <div className="col-3">
                     {
@@ -73,7 +74,8 @@ class CartItem extends Component
                         <button className="btn btn-success btn-add-to-cart"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
                                 onClick={this.handleClickAddToCart}
-                        >+1</button>
+                        >+{Config.currencyStringRule(this.props.item.price, this.props.currencyCode)}
+                        </button>
                     }
                 </div>
             </div>

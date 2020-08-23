@@ -69,6 +69,16 @@ class CartStorage
     {
         return localStorage.getItem('idempotencyKey') ?? this.updateIdempotencyKey();
     }
+
+    setCurrency(code)
+    {
+        localStorage.setItem('currencyCode', code);
+    }
+
+    getCurrency()
+    {
+        return localStorage.getItem('currencyCode') ?? 'EUR';
+    }
 }
 
 export default CartStorage;

@@ -37,7 +37,8 @@ class ApiController extends AbstractController
                 'id'          => $record->getId(),
                 'title'       => $record->getTitle(),
                 'price'       => $record->getPriceEuro(),
-                'description' => $record->getDescription()
+                'description' => $record->getDescription(),
+                'thumbnail'   => $record->getImageThumbnail()
             ];
         }
 

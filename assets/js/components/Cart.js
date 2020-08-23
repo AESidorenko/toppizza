@@ -3,6 +3,7 @@ import axios from 'axios';
 import CartItem from './CartItem';
 import OrderForm from './OrderForm';
 import Modal from './Modal';
+import Config from '../config';
 
 class Cart extends Component
 {
@@ -16,6 +17,7 @@ class Cart extends Component
             cartEmpty:      false,
             orderSubmitted: false,
             deliveryPrice:  0,
+            currencyCode:   props.currencyCode,
             modal:          {
                 title: '',
                 text:  '',
@@ -32,6 +34,7 @@ class Cart extends Component
         this.hideModal            = this.hideModal.bind(this);
         this.handleOrderSubmitted = this.handleOrderSubmitted.bind(this);
         this.handleOrderFailed    = this.handleOrderFailed.bind(this);
+        this.setCurrencyCode      = this.setCurrencyCode.bind(this);
     }
 
     componentDidMount()
@@ -59,6 +62,12 @@ class Cart extends Component
                     deliveryPrice: data.deliveryPrice,
                 });
             });
+    }
+
+    setCurrencyCode(currencyCode)
+    {
+        console.log(Config);
+        this.setState({currencyCode: currencyCode});
     }
 
     handleOrderSubmitted()
@@ -109,6 +118,7 @@ class Cart extends Component
 
     getTotalPrice()
     {
+
         return [...this.props.cart].reduce((s, i) => s += this.getItemPrice(i[0]) * i[1], 0) + this.state.deliveryPrice;
     }
 
@@ -147,7 +157,6 @@ class Cart extends Component
                             Your cart is empty.
                         </div>
                     </div>
-                    <a href="/">Back to menu...</a>
                 </div>
             );
         }
@@ -165,15 +174,16 @@ class Cart extends Component
                         <CartItem item={item}
                                   itemCount={this.props.cart.get(item.id) ?? 0}
                                   onCountChanged={this.handleCountChanged}
+                                  currencyCode={this.state.currencyCode}
                                   ref={this.itemRefs[index]}
                                   key={index}
                         ></CartItem>, this)
                 )
                 }
 
-                <div className="mt-3">+{this.state.deliveryPrice} for delvery</div>
+                <div className="mt-3">+{Config.currencyStringRule(this.state.deliveryPrice, this.state.currencyCode)} for delvery</div>
 
-                <div className="mt-3">Total price: {this.getTotalPrice()}</div>
+                <div className="mt-3">Total price: {Config.currencyStringRule(this.getTotalPrice(), this.state.currencyCode)}</div>
 
                 {this.state.cartEmpty ? '' : (
                     <OrderForm

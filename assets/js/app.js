@@ -21,7 +21,7 @@ let App = new class Application
     {
         this.MenuElement  = null;
         this.cartStorage  = new CartStorage();
-        this.currencyCode = 'EUR';
+        this.currencyCode = this.cartStorage.getCurrency();
 
         this.cartStorage.load();
 
@@ -35,8 +35,8 @@ let App = new class Application
         this.cartStorage.getIdempotencyKey();
 
         this.MiniCartElement = React.createElement(MiniCart, {cart: this.cartStorage.cart});
-        this.Currnecy        = React.createElement(Currency, {
-            value:    'EUR',
+        this.CurrnecyElement = React.createElement(Currency, {
+            value:    this.currencyCode,
             onChange: this.handleCurrencyChange,
         });
         this.MenuElement     = React.createElement(Menu, {
@@ -45,13 +45,14 @@ let App = new class Application
             currencyCode:       this.currencyCode,
         });
 
-        ReactDOM.render(this.Currnecy, document.getElementById(currencySelector));
+        ReactDOM.render(this.CurrnecyElement, document.getElementById(currencySelector));
         this.MenuObject     = ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
         this.miniCartObject = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
     }
 
     handleCurrencyChange(currencyCode)
     {
+        this.cartStorage.setCurrency(currencyCode);
         this.currencyCode = currencyCode;
         this.MenuObject.setCurrencyCode(currencyCode);
     }
