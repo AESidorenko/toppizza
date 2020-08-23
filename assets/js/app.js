@@ -21,28 +21,27 @@ let App = new class Application
     {
         this.cart        = new Map();
         this.MenuElement = null;
+
+        this.handleItemCountChanged = this.handleItemCountChanged.bind(this);
     }
 
     init(menuSelector, miniCartSelector)
     {
-        App.touchCart();
+        this.touchCart();
 
         this.MiniCartElement = React.createElement(MiniCart, {cart: this.cart});
-        this.MenuElement     = React.createElement(Menu, {cart: this.cart});
+        this.MenuElement     = React.createElement(Menu, {
+            cart:               this.cart,
+            onItemCountChanged: this.handleItemCountChanged,
+        });
 
         this.menuObject     = ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
         this.miniCartObject = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
     }
 
-    addToCart(itemId)
+    handleItemCountChanged(itemId, newValue)
     {
-        App.touchCart();
-
-        if (this.cart.has(itemId)) {
-            this.cart.set(itemId, this.cart.get(itemId) + 1);
-        } else {
-            this.cart.set(itemId, 1);
-        }
+        this.cart.set(itemId, newValue > 0 ? newValue : 0);
 
         this.saveCart();
     }
@@ -53,20 +52,6 @@ let App = new class Application
         localStorage.setItem('cartUpdated', Date.now().toString());
 
         this.miniCartObject.updateFromCart();
-    }
-
-    removeFromCart(itemId)
-    {
-        App.touchCart();
-
-        if (this.cart.has(itemId)) {
-            let count = this.cart.get(itemId) - 1;
-            this.cart.set(itemId, count > 0 ? count : 0);
-        } else {
-            this.cart.set(itemId, 0);
-        }
-
-        this.saveCart();
     }
 
     resetCart()

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import App from '../app';
 
 class MenuItem extends Component
 {
@@ -7,24 +6,30 @@ class MenuItem extends Component
     {
         super(props);
 
+        this.state = {
+            itemCount: props.itemCount,
+        };
+
         this.handleClickAddToCart      = this.handleClickAddToCart.bind(this);
         this.handleClickRemoveFromCart = this.handleClickRemoveFromCart.bind(this);
-        this.getCountInCart            = this.getCountInCart.bind(this);
     }
 
     handleClickAddToCart(e)
     {
-        this.props.onAddToCart(this.props.item.id);
+        this.setState((state) => {
+            return {itemCount: state.itemCount + 1};
+        }, function() {
+            this.props.onCountChanged(this.props.item.id, this.state.itemCount);
+        });
     }
 
     handleClickRemoveFromCart(e)
     {
-        this.props.onRemoveFromCart(this.props.item.id);
-    }
-
-    getCountInCart(id)
-    {
-        return App.getCountInCart(id) ?? 0;
+        this.setState((state) => {
+            return {itemCount: state.itemCount > 0 ? (state.itemCount - 1) : 0};
+        }, function() {
+            this.props.onCountChanged(this.props.item.id, this.state.itemCount);
+        });
     }
 
     render()
@@ -38,7 +43,7 @@ class MenuItem extends Component
                 </div>
                 <div className="card-footer">
                     {
-                        this.getCountInCart(this.props.item.id) === 0 ? (
+                        this.state.itemCount === 0 ? (
                             <button
                                 className="btn btn-success btn-add-to-cart"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
@@ -52,7 +57,7 @@ class MenuItem extends Component
                                     onClick={this.handleClickRemoveFromCart}
                                 >-
                                 </button>
-                                <span>x{this.getCountInCart(this.props.item.id)}</span>
+                                <span>x{this.state.itemCount}</span>
                                 <button
                                     className="btn btn-success btn-add-to-cart"
                                     id={'add-to-cart-' + this.props.item.id.toString()}

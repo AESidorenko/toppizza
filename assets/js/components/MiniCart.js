@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import App from '../app';
 
 class MiniCart extends Component
 {
@@ -8,32 +7,15 @@ class MiniCart extends Component
         super(props);
 
         this.state = {
-            cart: props.cart, // todo: check - needed?
+            itemsTotal: [...this.props.cart].reduce((s, i) => s += i[1], 0),
         };
 
-        this.handleToCart   = this.handleToCart.bind(this);
-        this.getItemsCount  = this.getItemsCount.bind(this);
         this.updateFromCart = this.updateFromCart.bind(this);
-    }
-
-    handleToCart()
-    {
-        App.touchCart();
-        window.location = '/cart';
     }
 
     updateFromCart()
     {
-        // const cart = new Map();
-        //
-        // [...this.state.cart].forEach((i) => cart.set(i[0], i[1]));
-
-        this.setState({cart: new Map([...App.getCart()])});
-    }
-
-    getItemsCount()
-    {
-        return [...this.state.cart].reduce((s, i) => s += i[1], 0);
+        this.setState({itemsTotal: [...this.props.cart].reduce((s, i) => s += i[1], 0)});
     }
 
     render()
@@ -41,9 +23,9 @@ class MiniCart extends Component
         return (
             <div>
                 {
-                    this.getItemsCount() > 0 ?
+                    this.state.itemsTotal > 0 ?
                         <button type="button" className="btn btn-success" onClick={this.handleToCart}>Items in cart: <span
-                            className="badge badge-warning">{this.getItemsCount()}</span></button> :
+                            className="badge badge-warning">{this.state.itemsTotal}</span></button> :
                         <button type="button" className="btn btn-outline-danger disabled">Cart empty</button>
                 }
             </div>
