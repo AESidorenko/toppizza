@@ -9,26 +9,47 @@
 import '../css/app.scss';
 import 'bootstrap';
 import React from 'react';
+import CartStorage from './cart-storage';
+import Cart from './components/Cart';
+import ReactDOM from 'react-dom';
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 
-let Cart = new class Application
+let CartApp = new class Application
 {
     constructor()
     {
+        this.cartStorage = new CartStorage();
+
+        this.cartStorage.load();
+
+        this.init                   = this.init.bind(this);
+        this.handleItemCountChanged = this.handleItemCountChanged.bind(this);
     }
 
-    init(menuSelector)
+    init(cartSelector)
     {
-        // this.MenuElement     = React.createElement(Menu, {cart: this.cart});
-        // this.MiniCartElement = React.createElement(MiniCart, {cart: this.cart});
-        //
-        // ReactDOM.render(this.MenuElement, document.getElementById(menuSelector));
-        // this.miniCartObject = ReactDOM.render(this.MiniCartElement, document.getElementById(miniCartSelector));
+        if (!this.cartStorage.exists()) {
+            // todo: also add a check if cart is obsolete
+            window.location = '/';
+        }
+
+        this.CartElement = React.createElement(Cart, {
+            cart:               this.cartStorage.cart,
+            onItemCountChanged: this.handleItemCountChanged,
+        });
+
+        this.cartObject = ReactDOM.render(this.CartElement, document.getElementById(cartSelector));
+    }
+
+    handleItemCountChanged(itemId, newValue)
+    {
+        this.cartStorage.cart.set(itemId, newValue > 0 ? newValue : 0);
+        this.cartStorage.save();
     }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    Cart.init('cart');
+    CartApp.init('cart');
 });
 
-export default Cart;
+export default CartApp;

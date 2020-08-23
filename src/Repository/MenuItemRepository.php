@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MenuItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -52,6 +53,16 @@ class MenuItemRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
                     ->Where('m.isActive = TRUE')
                     ->orderBy('m.priceEuro', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function findAllByIds($itemIds)
+    {
+        return $this->createQueryBuilder('m')
+                    ->Where('m.id IN(:ids)')
+                    ->orderBy('m.priceEuro', 'DESC')
+                    ->setParameter('ids', $itemIds, Connection::PARAM_INT_ARRAY)
                     ->getQuery()
                     ->getResult();
     }

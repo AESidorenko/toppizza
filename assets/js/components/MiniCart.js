@@ -13,6 +13,11 @@ class MiniCart extends Component
         this.updateFromCart = this.updateFromCart.bind(this);
     }
 
+    handleToCart()
+    {
+        window.location = '/cart';
+    }
+
     updateFromCart()
     {
         this.setState({itemsTotal: [...this.props.cart].reduce((s, i) => s += i[1], 0)});

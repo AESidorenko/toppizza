@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\MenuItem;
-use App\Repository\CartRepository;
 use App\Repository\MenuItemRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,25 +38,32 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/api/cart", methods={"POST"}, name="buildCartData")
-     * @param Request $request
+     * @param Request            $request
+     * @param MenuItemRepository $menuItemRepository
      * @return RedirectResponse
      */
-    public function buildCartData(Request $request): Response
+    public function buildCartData(Request $request, MenuItemRepository $menuItemRepository): Response
     {
         $data = json_decode($request->getContent(), true);
-        if ($data === null) {
+        if ($data === null || !is_array($data['items']) || empty($data['items'])) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, "Invalid cart content");
         }
 
-        // create new cart
-        // fill the cart by items from $data
-        // return cart hash
-
-        $cartId = uniqid();
+        $selectedMenuItems = $menuItemRepository->findAllByIds($data['items']);
+        $items             = [];
+        /** @var MenuItem $menuItem */
+        foreach ($selectedMenuItems as $menuItem) {
+            $items[] = [
+                'id'        => $menuItem->getId(),
+                'title'     => $menuItem->getTitle(),
+                'thumbnail' => $menuItem->getImageThumbnail(),
+                'active'    => $menuItem->getIsActive(),
+                'price'     => $menuItem->getPriceEuro()
+            ];
+        }
 
         return new JsonResponse([
-            'status' => 'ok',
-            'cartId' => $cartId,
+            'items' => $items,
         ]);
     }
 }
