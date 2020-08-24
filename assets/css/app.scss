@@ -54,3 +54,18 @@ a.currency-active:hover {
   text-decoration: none;
   color: white;
 }
+
+.thumbnail-container {
+  overflow: hidden;
+}
+
+.thumbnail:hover {
+  position: relative;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: auto;
+  display: block;
+  z-index: 999;
+  transition: all .3s ease-in-out;
+}

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Config from '../config';
+import {faMinus} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class MenuItem extends Component
 {
@@ -38,7 +40,9 @@ class MenuItem extends Component
         return (
             <div className="card mb-4">
                 {/* todo: make real images URL */}
-                <img className="card-img-top" src={'https://img.pizza/350/250?' + this.props.item.id.toString()} alt="Card image cap"></img>
+                <div className="thumbnail-container">
+                    <img className="card-img-top thumbnail" src={'https://img.pizza/350/250?' + this.props.item.id.toString()} alt="Card image cap"></img>
+                </div>
                 <div className="card-body">
                     <p className="card-text">{this.props.item.title}</p>
                     <hr/>
@@ -58,7 +62,7 @@ class MenuItem extends Component
                                     className="btn btn-secondary btn-remove-from-cart float-left btn-sm"
                                     id={'remove-from-cart-' + this.props.item.id.toString()}
                                     onClick={this.handleClickRemoveFromCart}
-                                >-
+                                ><FontAwesomeIcon icon={faMinus}/>
                                 </button>
                                 <span className="w-100 text-center">x{this.state.itemCount}</span>
                                 <button
