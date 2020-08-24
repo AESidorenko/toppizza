@@ -70,6 +70,11 @@ class Order
      */
     private $usdRate;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $idempotencyKey;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -215,6 +220,18 @@ class Order
     public function setUsdRate(string $usdRate): self
     {
         $this->usdRate = $usdRate;
+
+        return $this;
+    }
+
+    public function getIdempotencyKey(): ?string
+    {
+        return $this->idempotencyKey;
+    }
+
+    public function setIdempotencyKey(string $idempotencyKey): self
+    {
+        $this->idempotencyKey = $idempotencyKey;
 
         return $this;
     }

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <a type="link" href="/">Back to menu...</a>
+    <div id="cart" class="mt-3"></div>
+{% endblock %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('cart') }}
+{% endblock %}
