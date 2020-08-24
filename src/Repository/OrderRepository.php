@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Order;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -57,5 +57,21 @@ class OrderRepository extends ServiceEntityRepository
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getOneOrNullResult();
+    }
+
+    /**
+     * @param User $user
+     * @return Order[] Returns an array of Order objects
+     */
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('o')
+                    ->innerJoin('o.customer', 'u')
+                    ->andWhere('u.id = :userId')
+                    ->setParameter('userId', $user->getId())
+                    ->orderBy('o.updatedAt', 'DESC')
+                    ->setMaxResults(10)
+                    ->getQuery()
+                    ->getResult();
     }
 }

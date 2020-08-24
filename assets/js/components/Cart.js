@@ -144,7 +144,6 @@ class Cart extends Component
                             Thank you for your order! We will deliver it within an hour.
                         </div>
                     </div>
-                    <a href="/">Back to menu...</a>
                 </div>
             );
         }

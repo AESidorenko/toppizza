@@ -63,11 +63,12 @@ class ApiController extends AbstractController
         /** @var MenuItem $menuItem */
         foreach ($selectedMenuItems as $menuItem) {
             $items[] = [
-                'id'        => $menuItem->getId(),
-                'title'     => $menuItem->getTitle(),
-                'thumbnail' => $menuItem->getImageThumbnail(),
-                'active'    => $menuItem->getIsActive(),
-                'price'     => $menuItem->getPriceEuro()
+                'id'          => $menuItem->getId(),
+                'title'       => $menuItem->getTitle(),
+                'description' => $menuItem->getDescription(),
+                'thumbnail'   => $menuItem->getImageThumbnail(),
+                'active'      => $menuItem->getIsActive(),
+                'price'       => $menuItem->getPriceEuro()
             ];
         }
 

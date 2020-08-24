@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <a type="link" href="/">Back to menu...</a>
+    <h3 class="mt-3">Orders history</h3>
+    {% for order in orders %}
+        <div class="card>">
+            <div class="card-header">
+                {{ order.date }}
+            </div>
+            <ul>
+                {% for item in order.items %}
+                    <li>{{ item.title }} (&euro;{{ item.price }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block title %}
+    Orders history
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

@@ -41,26 +41,28 @@ class MenuItem extends Component
                 <img className="card-img-top" src={'https://img.pizza/350/250?' + this.props.item.id.toString()} alt="Card image cap"></img>
                 <div className="card-body">
                     <p className="card-text">{this.props.item.title}</p>
+                    <hr/>
+                    <p className="text-secondary"><small>{this.props.item.description}</small></p>
                 </div>
-                <div className="card-footer">
+                <div className="card-footer text-center">
                     {
                         this.state.itemCount === 0 ? (
                             <button
-                                className="btn btn-success btn-add-to-cart"
+                                className="btn btn-danger btn-add-to-cart btn-sm"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
                                 onClick={this.handleClickAddToCart}
                             >Add to cart +{Config.currencyStringRule(this.props.item.price, this.props.currencyCode)}</button>
                         ) : (
-                            <div>
+                            <div className="text-center">
                                 <button
-                                    className="btn btn-success btn-remove-from-cart"
+                                    className="btn btn-secondary btn-remove-from-cart float-left btn-sm"
                                     id={'remove-from-cart-' + this.props.item.id.toString()}
                                     onClick={this.handleClickRemoveFromCart}
                                 >-
                                 </button>
-                                <span>x{this.state.itemCount}</span>
+                                <span className="w-100 text-center">x{this.state.itemCount}</span>
                                 <button
-                                    className="btn btn-success btn-add-to-cart"
+                                    className="btn btn-danger btn-add-to-cart float-right btn-sm"
                                     id={'add-to-cart-' + this.props.item.id.toString()}
                                     onClick={this.handleClickAddToCart}
                                 >+{Config.currencyStringRule(this.props.item.price, this.props.currencyCode)}

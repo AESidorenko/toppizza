@@ -6,8 +6,10 @@
 {% endblock %}
 
 {% block title %}
+    Cart
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('cart') }}
 {% endblock %}
