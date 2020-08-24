@@ -1,0 +1,16 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/app.js"
+      ]
+    },
+    "cart": {
+      "js": [
+        "/build/runtime.js",
+        "/build/cart.js"
+      ]
+    }
+  }
+}
