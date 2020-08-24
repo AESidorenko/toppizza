@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faMinus} from '@fortawesome/free-solid-svg-icons';
 import Config from '../config';
 
 class CartItem extends Component
@@ -42,17 +43,18 @@ class CartItem extends Component
         }
 
         return (
-            <div className="row">
+            <div className="row m-3">
                 <div className="col-2">
-                    <p>{this.props.item.id}. [pic]</p>
+                    <img src={'https://img.pizza/100/100?' + this.props.item.id.toString()} alt="..." className="img-thumbnail"/>
                 </div>
-                <div className="col-4">
-                    <p>{this.props.item.title}</p>
+                <div className="col-3">
+                    <p><b>{this.props.item.title}</b></p>
+                    <p><small className="text-secondary">{this.props.item.description}</small></p>
                 </div>
                 <div className="col-3">
                     <p>{Config.currencyStringRule(this.props.item.price * this.state.itemCount, this.props.currencyCode)}</p>
                 </div>
-                <div className="col-3">
+                <div className="col-4 text-right">
                     {
                         this.state.itemCount === 1 ? (
                             <button
@@ -65,11 +67,11 @@ class CartItem extends Component
                                 className="btn btn-success btn-remove-from-cart"
                                 id={'remove-from-cart-' + this.props.item.id.toString()}
                                 onClick={this.handleClickRemoveFromCart}
-                            >-
+                            ><FontAwesomeIcon icon={faMinus}/>
                             </button>
                         )
                     }
-                    {<span>x{this.state.itemCount}</span>}
+                    {<span className="ml-3 mr-3">x{this.state.itemCount}</span>}
                     {
                         <button className="btn btn-success btn-add-to-cart"
                                 id={'add-to-cart-' + this.props.item.id.toString()}
