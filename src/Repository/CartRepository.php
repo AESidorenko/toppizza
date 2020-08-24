@@ -47,4 +47,13 @@ class CartRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneByUuid(string $uuid): ?Cart
+    {
+        return $this->createQueryBuilder('c')
+                    ->andWhere('c.uuid = :val')
+                    ->setParameter('val', $uuid)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
 }
