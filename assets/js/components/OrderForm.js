@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import CartStorage from '../cart-storage';
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 class OrderForm extends Component
 {
     constructor(props)

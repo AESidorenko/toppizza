@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import MenuItem from './MenuItem';
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 class Menu extends Component
 {
     constructor(props)

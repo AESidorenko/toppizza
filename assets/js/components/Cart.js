@@ -5,6 +5,8 @@ import OrderForm from './OrderForm';
 import Modal from './Modal';
 import Config from '../config';
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 class Cart extends Component
 {
     constructor(props)
