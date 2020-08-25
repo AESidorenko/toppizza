@@ -69,7 +69,6 @@
 {% block javascripts %}
     <script>
         window.csrf_token = "{{ csrf_token('authenticate') }}";
-        console.log('Token: ', csrf_token);
     </script>
 {% endblock %}
 </body>

@@ -43,8 +43,6 @@ class Menu extends Component
 
     render()
     {
-        console.log('Menu re-render');
-
         return (
             <div>
                 {this.state.loading ? (

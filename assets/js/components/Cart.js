@@ -48,7 +48,6 @@ class Cart extends Component
     {
         console.log('Call /api/cart', {
             'items':       [...this.props.cart].map((v) => v[0]),
-            '_csrf_token': window.csrf_token,
         });
 
         axios({
