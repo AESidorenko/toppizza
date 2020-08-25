@@ -22,22 +22,39 @@
                     <a href="/orders"><small>Orders history</small></a><br/>
                     <a href="/logout"><small>Logout</small></a>
                 {% else %}
-                    <form>
+                    <form id="login-form" method="post">
                         <div class="form-row">
                             <div class="col-12">
-                                <input type="text" id="username" class="form-control form-control-sm"
+                                <input type="text" name="username" id="inputUsername"
+                                       class="form-control form-control-sm"
                                        placeholder="Username"/>
                             </div>
                             <div class="col-12">
-                                <input type="password" id="password" class="form-control form-control-sm"
+                                <input type="password" name="password" id="inputPassword"
+                                       class="form-control form-control-sm"
                                        placeholder="Password"/>
                             </div>
                             <div class="col-12">
-                                <button onClick="loginUser()" type="button" class="btn btn-success btn-sm float-right">
+                                <div class="checkbox mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="remember-me"
+                                               name="_remember_me">
+                                        <label class="form-check-label small-cb" for="remember-me">Remember me</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                {#                                <button onClick="loginUser()" type="button" class="btn btn-success btn-sm float-right">#}
+                                {#                                    Login#}
+                                {#                                </button>#}
+                                <button type="submit" class="btn btn-success btn-sm float-right">
                                     Login
                                 </button>
                             </div>
                         </div>
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
                     </form>
                 {% endif %}
             </div>
