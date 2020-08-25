@@ -68,24 +68,8 @@
 
 {% block javascripts %}
     <script>
-
-        const loginUser = function() {
-            const data = {
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value,
-            };
-
-            fetch('/login', {
-                method:   'POST',
-                headers:  {
-                    'Content-Type': 'application/json',
-                },
-                redirect: 'follow',
-                body:     JSON.stringify(data),
-            }).finally(() => {
-                window.location.reload();
-            });
-        };
+        window.csrf_token = "{{ csrf_token('authenticate') }}";
+        console.log('Token: ', csrf_token);
     </script>
 {% endblock %}
 </body>

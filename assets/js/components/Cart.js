@@ -46,11 +46,19 @@ class Cart extends Component
 
     loadItems()
     {
+        console.log('Call /api/cart', {
+            'items':       [...this.props.cart].map((v) => v[0]),
+            '_csrf_token': window.csrf_token,
+        });
+
         axios({
             method: 'post',
             url:    '/api/cart',
             data:   {
-                'items': [...this.props.cart].map((v) => v[0]),
+                'items':       [...this.props.cart].map((v) => v[0]),
+                'username':    '',
+                'password':    '',
+                '_csrf_token': window.csrf_token,
             },
         })
             .then(({data}) => {

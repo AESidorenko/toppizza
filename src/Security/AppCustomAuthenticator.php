@@ -41,8 +41,11 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function supports(Request $request)
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route')
-               && $request->isMethod('POST');
+        $isLoginRoute     = self::LOGIN_ROUTE === $request->attributes->get('_route');
+        $isPostrequest    = $request->isMethod('POST');
+        $isXmlHttpRequest = $request->isXmlHttpRequest();
+
+        return $isLoginRoute && $isPostrequest; // && !$isXmlHttpRequest;
     }
 
     public function getCredentials(Request $request)
@@ -52,6 +55,12 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
             'password'   => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
+
+        if ($request->request->get('_csrf_token') === null) {
+            $jsonBodyContent           = json_decode($request->getContent(), true);
+            $credentials['csrf_token'] = $jsonBodyContent['_csrf_token'] ?? null;
+        }
+
         $request->getSession()->set(
             Security::LAST_USERNAME,
             $credentials['username']
