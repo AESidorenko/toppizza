@@ -97,7 +97,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -138,8 +137,6 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public function getPhone(): ?string
@@ -188,7 +185,6 @@ class User implements UserInterface
     {
         if ($this->orders->contains($order)) {
             $this->orders->removeElement($order);
-            // set the owning side to null (unless already changed)
             if ($order->getCustomer() === $this) {
                 $order->setCustomer(null);
             }
@@ -218,7 +214,6 @@ class User implements UserInterface
     {
         $this->cart = $cart;
 
-        // set the owning side of the relation if necessary
         if ($cart->getCustomer() !== $this) {
             $cart->setCustomer($this);
         }

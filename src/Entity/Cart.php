@@ -85,7 +85,6 @@ class Cart
     {
         if ($this->cartItems->contains($cartItem)) {
             $this->cartItems->removeElement($cartItem);
-            // set the owning side to null (unless already changed)
             if ($cartItem->getCart() === $this) {
                 $cartItem->setCart(null);
             }
