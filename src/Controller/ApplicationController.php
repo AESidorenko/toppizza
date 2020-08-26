@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class ApplicationController
+ * @package App\Controller
+ */
 class ApplicationController extends AbstractController
 {
     /**

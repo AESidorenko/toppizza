@@ -2,7 +2,7 @@ const Config = new class
 {
     constructor()
     {
-        this.currencyRate = 1.18; // 1 USD for 1 EUR
+        this.currencyRate = 1.15; // 1 USD for 1 EUR - todo: make it configurable
 
         this.currencyStringRule = this.currencyStringRule.bind(this);
     }

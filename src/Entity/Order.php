@@ -203,7 +203,6 @@ class Order
     {
         if ($this->items->contains($item)) {
             $this->items->removeElement($item);
-            // set the owning side to null (unless already changed)
             if ($item->getOrderData() === $this) {
                 $item->setOrderData(null);
             }

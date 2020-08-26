@@ -15,7 +15,7 @@ class MenuFixtures extends Fixture
                 ->setTitle("Menu item $i")
                 ->setDescription("Description for menu item $i")
                 ->setIsActive(true)
-                ->setPriceEuro(100 + $i)
+                ->setPriceEuro(10 + $i)
                 ->setImageThumbnail("menu_item_{$i}_thumbnail.jpg")
                 ->setImageFullsize("menu_item_{$i}_fullsize.jpg");
 

@@ -39,7 +39,6 @@ class MenuItem extends Component
     {
         return (
             <div className="card mb-4">
-                {/* todo: make real images URL */}
                 <div className="thumbnail-container">
                     <img className="card-img-top thumbnail" src={'/img/' + this.props.item.thumbnail} alt="Card image cap"></img>
                 </div>
