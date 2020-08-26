@@ -23,6 +23,7 @@ class UsersFixtures extends Fixture
         $user
             ->setUsername('user1')
             ->setPassword($this->passwordEncoder->encodePassword($user, 'password'))
+            ->setName('Holmes, Sh.')
             ->setAddress('Baker st, 221b')
             ->setPhone('+1 (123) 456 789')
             ->setRoles([User::ROLE_REGISTERED_CUSTOMER]);

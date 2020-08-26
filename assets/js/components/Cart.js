@@ -5,6 +5,8 @@ import OrderForm from './OrderForm';
 import Modal from './Modal';
 import Config from '../config';
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 class Cart extends Component
 {
     constructor(props)
@@ -24,6 +26,9 @@ class Cart extends Component
             },
             showModal:      false,
             modalCallback:  this.hideModal,
+            clientName:     '',
+            clientAddress:  '',
+            clientPhone:    '',
         };
 
         this.itemRefs = [];
@@ -35,6 +40,7 @@ class Cart extends Component
         this.handleOrderSubmitted = this.handleOrderSubmitted.bind(this);
         this.handleOrderFailed    = this.handleOrderFailed.bind(this);
         this.setCurrencyCode      = this.setCurrencyCode.bind(this);
+        this.handleChange         = this.handleChange.bind(this);
     }
 
     componentDidMount()
@@ -48,11 +54,17 @@ class Cart extends Component
             method: 'post',
             url:    '/api/cart',
             data:   {
-                'items': [...this.props.cart].map((v) => v[0]),
+                'items':       [...this.props.cart].map((v) => v[0]),
+                'username':    '',
+                'password':    '',
+                '_csrf_token': window.csrf_token,
             },
         })
             .then(({data}) => {
-                console.log('Loaded', data);
+                if (data.items.length === 0) {
+                    window.location = '/';
+                }
+
                 this.itemRefs    = Array(data.items.length).fill(null).map(() => React.createRef());
                 const itemsTotal = [...this.props.cart].reduce((s, i) => s += i[1], 0);
                 this.setState({
@@ -60,6 +72,9 @@ class Cart extends Component
                     loading:       false,
                     cartEmpty:     itemsTotal === 0,
                     deliveryPrice: data.deliveryPrice,
+                    clientName:    data.clientName,
+                    clientAddress: data.clientAddress,
+                    clientPhone:   data.clientPhone,
                 });
             });
     }
@@ -68,6 +83,14 @@ class Cart extends Component
     {
         console.log(Config);
         this.setState({currencyCode: currencyCode});
+    }
+
+    handleChange(e)
+    {
+        const newState        = {};
+        newState[e.target.id] = e.target.value;
+
+        this.setState(newState);
     }
 
     handleOrderSubmitted()
@@ -190,10 +213,13 @@ class Cart extends Component
                         onError={this.handleOrderFailed}
                         cart={this.props.cart}
                         totalPrice={this.getTotalPrice()}
+                        clientName={this.state.clientName}
+                        clientAddress={this.state.clientAddress}
+                        clientPhone={this.state.clientPhone}
+                        onChange={this.handleChange}
                     ></OrderForm>
                 )}
             </div>
-
         );
     }
 }

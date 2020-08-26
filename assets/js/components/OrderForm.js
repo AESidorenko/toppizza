@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import CartStorage from '../cart-storage';
 
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 class OrderForm extends Component
 {
     constructor(props)
@@ -12,25 +14,29 @@ class OrderForm extends Component
             cartStorage: new CartStorage(),
         };
 
-        this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
-    }
+        this.nameInput    = React.createRef();
+        this.addressInput = React.createRef();
+        this.phoneInput   = React.createRef();
 
-    componentDidMount()
-    {
-        this.validateForm();
+        this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
+        this.handleChange      = this.handleChange.bind(this);
     }
 
     handleOrderSubmit()
     {
+        if (!this.validateForm()) {
+            return;
+        }
+
         axios({
             method: 'post',
             url:    '/api/order',
             data:   {
                 'items':          [...this.props.cart.entries()],
                 'contacts':       {
-                    'username': document.getElementById('username').value,
-                    'address':  document.getElementById('userAddress').value,
-                    'phone':    document.getElementById('contactPhone').value,
+                    'username': this.props.clientName,
+                    'address':  this.props.clientAddress,
+                    'phone':    this.props.clientPhone,
                 },
                 'usdRate':        1.15, //todo: make configurable
                 'totalPrice':     this.props.totalPrice,
@@ -38,10 +44,6 @@ class OrderForm extends Component
             },
         })
             .then((response) => {
-                if (response.status == 412) {
-                    return;
-                }
-
                 if (response.status != 200) {
                     this.props.onError();
                     return;
@@ -56,13 +58,14 @@ class OrderForm extends Component
             });
     }
 
+    handleChange(e)
+    {
+        this.props.onChange(e);
+    }
+
     validateForm()
     {
-        const nameInput    = document.getElementById('username');
-        const addressInput = document.getElementById('userAddress');
-        const phoneInput   = document.getElementById('contactPhone');
-
-        const fails = [nameInput, addressInput, phoneInput].reduce((fails, element) => {
+        const fails = [this.nameInput.current, this.addressInput.current, this.phoneInput.current].reduce((fails, element) => {
             if (element.value === '') {
                 element.classList.add(...['border', 'border-danger']);
                 return 1;
@@ -71,11 +74,7 @@ class OrderForm extends Component
             return 0;
         }, 0);
 
-        if (fails === 0) {
-            document.getElementById('btnSubmitOrder').classList.remove('disabled');
-        } else {
-            document.getElementById('btnSubmitOrder').classList.add('disabled');
-        }
+        return fails === 0;
     }
 
     render()
@@ -87,19 +86,23 @@ class OrderForm extends Component
                     <div className="form-group row">
                         <label htmlFor="username" className="col-sm-2 col-form-label">Name</label>
                         <div className="col-sm-4">
-                            <input type="text" className="form-control" id="username" onChange={this.validateForm}/>
+                            <input type="text" maxLength="255" className="form-control" id="clientName" ref={this.nameInput} value={this.props.clientName}
+                                   onChange={this.handleChange}/>
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label htmlFor="userAddress" className="col-sm-2 col-form-label">Address</label>
+                        <label htmlFor="clientAddress" className="col-sm-2 col-form-label">Address</label>
                         <div className="col-sm-4">
-                            <input type="text" className="form-control" id="userAddress" onChange={this.validateForm}/>
+                            <input type="text" maxLength="255" className="form-control" id="clientAddress" ref={this.addressInput}
+                                   value={this.props.clientAddress}
+                                   onChange={this.handleChange}/>
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label htmlFor="contactPhone" className="col-sm-2 col-form-label">Phone</label>
+                        <label htmlFor="clientPhone" className="col-sm-2 col-form-label">Phone</label>
                         <div className="col-sm-4">
-                            <input type="tel" className="form-control" id="contactPhone" onChange={this.validateForm}/>
+                            <input type="tel" maxLength="32" className="form-control" id="clientPhone" ref={this.phoneInput} value={this.props.clientPhone}
+                                   onChange={this.handleChange}/>
                         </div>
                     </div>
                     <button type="button" id="btnSubmitOrder" className="btn btn-primary" onClick={this.handleOrderSubmit}>Submit order</button>

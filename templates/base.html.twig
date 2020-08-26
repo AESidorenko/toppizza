@@ -8,7 +8,8 @@
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
+
+<nav class="navbar navbar-default navbar-fixed-top fixedElement">
     <div class="container">
         <div class="row w-100">
             <div class="col-8">
@@ -22,53 +23,60 @@
                     <a href="/orders"><small>Orders history</small></a><br/>
                     <a href="/logout"><small>Logout</small></a>
                 {% else %}
-                    <form>
+                    <form id="login-form" method="post">
                         <div class="form-row">
                             <div class="col-12">
-                                <input type="text" id="username" class="form-control form-control-sm"
+                                <input type="text" name="username" id="inputUsername"
+                                       class="form-control form-control-sm"
                                        placeholder="Username"/>
                             </div>
                             <div class="col-12">
-                                <input type="password" id="password" class="form-control form-control-sm"
+                                <input type="password" name="password" id="inputPassword"
+                                       class="form-control form-control-sm"
                                        placeholder="Password"/>
                             </div>
                             <div class="col-12">
-                                <button onClick="loginUser()" type="button" class="btn btn-success btn-sm float-right">
+                                <div class="checkbox mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="remember-me"
+                                               name="_remember_me">
+                                        <label class="form-check-label small-cb" for="remember-me">Remember me</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                {#                                <button onClick="loginUser()" type="button" class="btn btn-success btn-sm float-right">#}
+                                {#                                    Login#}
+                                {#                                </button>#}
+                                <button type="submit" class="btn btn-success btn-sm float-right">
                                     Login
                                 </button>
                             </div>
                         </div>
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
                     </form>
                 {% endif %}
             </div>
         </div>
+
+        <div class="row w-100">
+            <div class="col col-12 w-100 text-right text-danger p-2" id="mini-cart"></div>
+        </div>
     </div>
 </nav>
 
-<div class="container">
+<div class="container main-page">
     {% block body %}{% endblock %}
+    <hr>
+    <small class="text-secondary"><b>Disclaimer:</b> this site is created for demo purposes only. Please don't hope to
+        get any real pizza here.</small>
 </div>
 
 {% block javascripts %}
     <script>
-
-        const loginUser = function() {
-            const data = {
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value,
-            };
-
-            fetch('/login', {
-                method:   'POST',
-                headers:  {
-                    'Content-Type': 'application/json',
-                },
-                redirect: 'follow',
-                body:     JSON.stringify(data),
-            }).finally(() => {
-                window.location.reload();
-            });
-        };
+        window.csrf_token = "{{ csrf_token('authenticate') }}";
     </script>
 {% endblock %}
 </body>

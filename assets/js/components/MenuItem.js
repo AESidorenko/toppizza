@@ -41,7 +41,7 @@ class MenuItem extends Component
             <div className="card mb-4">
                 {/* todo: make real images URL */}
                 <div className="thumbnail-container">
-                    <img className="card-img-top thumbnail" src={'https://img.pizza/350/250?' + this.props.item.id.toString()} alt="Card image cap"></img>
+                    <img className="card-img-top thumbnail" src={'/img/' + this.props.item.thumbnail} alt="Card image cap"></img>
                 </div>
                 <div className="card-body">
                     <p className="card-text">{this.props.item.title}</p>

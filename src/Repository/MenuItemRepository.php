@@ -52,7 +52,7 @@ class MenuItemRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
                     ->Where('m.isActive = TRUE')
-                    ->orderBy('m.priceEuro', 'DESC')
+                    ->orderBy('m.id')
                     ->getQuery()
                     ->getResult();
     }
