@@ -45,7 +45,8 @@ class CartItem extends Component
         return (
             <div className="row m-3">
                 <div className="col-2">
-                    <img src={'https://img.pizza/100/100?' + this.props.item.id.toString()} alt="..." className="img-thumbnail"/>
+                    <img className="img-thumbnail" src={'/img/' + this.props.item.thumbnail} alt="Card image cap"></img>
+                    {/*<img src={'https://img.pizza/100/100?' + this.props.item.id.toString()} alt="..." className="img-thumbnail"/>*/}
                 </div>
                 <div className="col-3">
                     <p><b>{this.props.item.title}</b></p>
