@@ -8,17 +8,31 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+/**
+ * Class RequestSubscriber
+ * @package App\EventSubscriber
+ */
 class RequestSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
 
+    /**
+     * @var SessionInterface
+     */
     private $session;
 
+    /**
+     * RequestSubscriber constructor.
+     * @param SessionInterface $session
+     */
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
 
+    /**
+     * @param RequestEvent $event
+     */
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
@@ -33,6 +47,9 @@ class RequestSubscriber implements EventSubscriberInterface
         $this->saveTargetPath($this->session, 'main', $request->getUri());
     }
 
+    /**
+     * @return array|\string[][]
+     */
     public static function getSubscribedEvents()
     {
         return [

@@ -17,8 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class ApiController
+ * @package App\Controller
+ */
 class ApiController extends AbstractController
 {
+    /**
+     *
+     */
     const DELIVERY_PRICE = 2;
 
     /**
