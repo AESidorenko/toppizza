@@ -8,7 +8,8 @@
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
+
+<nav class="navbar navbar-default navbar-fixed-top fixedElement">
     <div class="container">
         <div class="row w-100">
             <div class="col-8">
@@ -59,11 +60,18 @@
                 {% endif %}
             </div>
         </div>
+
+        <div class="row w-100">
+            <div class="col col-12 w-100 text-right text-danger p-2" id="mini-cart"></div>
+        </div>
     </div>
 </nav>
 
-<div class="container">
+<div class="container main-page">
     {% block body %}{% endblock %}
+    <hr>
+    <small class="text-secondary"><b>Disclaimer:</b> this site is created for demo purposes only. Please don't hope to
+        get any real pizza here.</small>
 </div>
 
 {% block javascripts %}
