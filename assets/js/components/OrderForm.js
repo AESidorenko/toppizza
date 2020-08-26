@@ -40,10 +40,6 @@ class OrderForm extends Component
             },
         })
             .then((response) => {
-                if (response.status == 412) {
-                    return;
-                }
-
                 if (response.status != 200) {
                     this.props.onError();
                     return;
@@ -60,7 +56,7 @@ class OrderForm extends Component
 
     validateForm()
     {
-        const nameInput    = document.getElementById('username');
+        const nameInput    = document.getElementById('clientName');
         const addressInput = document.getElementById('userAddress');
         const phoneInput   = document.getElementById('contactPhone');
 
@@ -89,19 +85,19 @@ class OrderForm extends Component
                     <div className="form-group row">
                         <label htmlFor="username" className="col-sm-2 col-form-label">Name</label>
                         <div className="col-sm-4">
-                            <input type="text" className="form-control" id="username" onChange={this.validateForm}/>
+                            <input type="text" maxLength="255" className="form-control" id="clientName" onChange={this.validateForm}/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="userAddress" className="col-sm-2 col-form-label">Address</label>
                         <div className="col-sm-4">
-                            <input type="text" className="form-control" id="userAddress" onChange={this.validateForm}/>
+                            <input type="text" maxLength="255" className="form-control" id="userAddress" onChange={this.validateForm}/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="contactPhone" className="col-sm-2 col-form-label">Phone</label>
                         <div className="col-sm-4">
-                            <input type="tel" className="form-control" id="contactPhone" onChange={this.validateForm}/>
+                            <input type="tel" maxLength="32" className="form-control" id="contactPhone" onChange={this.validateForm}/>
                         </div>
                     </div>
                     <button type="button" id="btnSubmitOrder" className="btn btn-primary" onClick={this.handleOrderSubmit}>Submit order</button>

@@ -46,10 +46,6 @@ class Cart extends Component
 
     loadItems()
     {
-        console.log('Call /api/cart', {
-            'items':       [...this.props.cart].map((v) => v[0]),
-        });
-
         axios({
             method: 'post',
             url:    '/api/cart',
@@ -61,7 +57,10 @@ class Cart extends Component
             },
         })
             .then(({data}) => {
-                console.log('Loaded', data);
+                if (data.items.length === 0) {
+                    window.location = '/';
+                }
+
                 this.itemRefs    = Array(data.items.length).fill(null).map(() => React.createRef());
                 const itemsTotal = [...this.props.cart].reduce((s, i) => s += i[1], 0);
                 this.setState({
