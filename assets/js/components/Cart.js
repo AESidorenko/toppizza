@@ -203,7 +203,7 @@ class Cart extends Component
                 )
                 }
 
-                <div className="mt-3">+{Config.currencyStringRule(this.state.deliveryPrice, this.state.currencyCode)} for delvery</div>
+                <div className="mt-3">+{Config.currencyStringRule(this.state.deliveryPrice, this.state.currencyCode)} for delivery</div>
 
                 <div className="mt-3">Total price: {Config.currencyStringRule(this.getTotalPrice(), this.state.currencyCode)}</div>
 
