@@ -10,7 +10,7 @@
             </div>
             <ul>
                 {% for item in order.items %}
-                    <li>{{ item.title }} (&euro;{{ item.price }})</li>
+                    <li>{{ item.count }}x - {{ item.title }} =&euro;{{ item.count * item.price }}</li>
                 {% endfor %}
             </ul>
         </div>

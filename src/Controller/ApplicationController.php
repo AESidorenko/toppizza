@@ -40,7 +40,7 @@ class ApplicationController extends AbstractController
     }
 
     /**
-     * @Route("/cart", methods={"GET"}, name="cart")
+     * @Route("/cart", name="cart")
      * @return Response
      */
     public function cart()

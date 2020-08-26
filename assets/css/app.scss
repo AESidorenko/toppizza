@@ -66,6 +66,22 @@ a.currency-active:hover {
   width: 110%;
   height: auto;
   display: block;
-  z-index: 999;
+  z-index: 998;
   transition: all .3s ease-in-out;
+}
+
+.small-cb {
+  font-size: 75%;
+}
+
+.fixedElement {
+  background-color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.main-page {
+  margin-top: 217px;
 }
