@@ -5344,7 +5344,6 @@
     "platform": {
         "php": "^7.2.5",
         "ext-ctype": "*",
-        "ext-http": "*",
         "ext-iconv": "*"
     },
     "platform-dev": []
