@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\MenuItem;
 use App\Entity\Order;
 use App\Entity\OrderItems;
+use App\Entity\User;
 use App\Repository\MenuItemRepository;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -75,7 +76,13 @@ class ApiController extends AbstractController
             ];
         }
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         return new JsonResponse([
+            'clientName'    => $user === null ? '' : $user->getName(),
+            'clientAddress' => $user === null ? '' : $user->getAddress(),
+            'clientPhone'   => $user === null ? '' : $user->getPhone(),
             'items'         => $items,
             'deliveryPrice' => self::DELIVERY_PRICE //todo: make it configurable
         ]);
@@ -103,6 +110,21 @@ class ApiController extends AbstractController
             $logger->error('Incorrect cart content', [
                 'url'            => '/api/order',
                 'requestContent' => $request->getContent()
+            ]);
+
+            return new JsonResponse([
+                'status'  => 'error',
+                'message' => 'Incorrect cart content'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!is_array($data['contacts'])
+            || empty($data['contacts']['username'])
+            || empty($data['contacts']['address'])
+            || empty($data['contacts']['phone'])
+        ) {
+            $logger->error('Incorrect order contacts content', [
+                'contacts' => $data['contacts'] ?? []
             ]);
 
             return new JsonResponse([
@@ -142,6 +164,10 @@ class ApiController extends AbstractController
             foreach ($data['items'] as $item) {
                 $menuItem = $menuItemRepository->find($item[0]);
                 if ($menuItem === null) {
+                    $logger->error('Order item not found', [
+                        'itemId'           => $item[0],
+                        'customerContacts' => $data['contacts'],
+                    ]);
                     throw new \Exception(sprintf("Menu item not found: id=%d", $item[0]));
                 }
                 $orderItem =
@@ -159,9 +185,12 @@ class ApiController extends AbstractController
             $entityManager->flush();
 
             $logger->info('Order created', [
-                'orderId'    => $order->getId(),
-                'itemsCount' => $order->getItems()->count(),
-                'price'      => $order->getPrice()
+                'orderId'          => $order->getId(),
+                'itemsCount'       => $order->getItems()->count(),
+                'delvieryPrice'    => $order->getDeliveryPrice(),
+                'price'            => $order->getPrice(),
+                'currencyUsed'     => $order->getCurrencyUsed(),
+                'customerContacts' => $data['contacts'],
             ]);
 
             $entityManager->commit();

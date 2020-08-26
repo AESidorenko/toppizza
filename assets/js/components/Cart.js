@@ -26,6 +26,9 @@ class Cart extends Component
             },
             showModal:      false,
             modalCallback:  this.hideModal,
+            clientName:     '',
+            clientAddress:  '',
+            clientPhone:    '',
         };
 
         this.itemRefs = [];
@@ -37,6 +40,7 @@ class Cart extends Component
         this.handleOrderSubmitted = this.handleOrderSubmitted.bind(this);
         this.handleOrderFailed    = this.handleOrderFailed.bind(this);
         this.setCurrencyCode      = this.setCurrencyCode.bind(this);
+        this.handleChange         = this.handleChange.bind(this);
     }
 
     componentDidMount()
@@ -68,6 +72,9 @@ class Cart extends Component
                     loading:       false,
                     cartEmpty:     itemsTotal === 0,
                     deliveryPrice: data.deliveryPrice,
+                    clientName:    data.clientName,
+                    clientAddress: data.clientAddress,
+                    clientPhone:   data.clientPhone,
                 });
             });
     }
@@ -76,6 +83,14 @@ class Cart extends Component
     {
         console.log(Config);
         this.setState({currencyCode: currencyCode});
+    }
+
+    handleChange(e)
+    {
+        const newState        = {};
+        newState[e.target.id] = e.target.value;
+
+        this.setState(newState);
     }
 
     handleOrderSubmitted()
@@ -198,10 +213,13 @@ class Cart extends Component
                         onError={this.handleOrderFailed}
                         cart={this.props.cart}
                         totalPrice={this.getTotalPrice()}
+                        clientName={this.state.clientName}
+                        clientAddress={this.state.clientAddress}
+                        clientPhone={this.state.clientPhone}
+                        onChange={this.handleChange}
                     ></OrderForm>
                 )}
             </div>
-
         );
     }
 }
